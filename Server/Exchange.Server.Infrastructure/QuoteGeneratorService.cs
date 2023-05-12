@@ -1,5 +1,5 @@
 ﻿using Exchange.Abstractions;
-using Exchange.Domain.Models;
+using Exchange.Models;
 using Exchange.Server.Application.Common.Interfaces;
 using Exchange.Server.Domain.Models;
 using Microsoft.Extensions.Options;

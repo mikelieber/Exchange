@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Exchange.Abstractions\Exchange.Abstractions.csproj" />
-      <ProjectReference Include="..\..\Exchange.Domain.Models\Exchange.Domain.Models.csproj" />
+      <ProjectReference Include="..\..\Exchange.Models\Exchange.Models.csproj" />
       <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Application\Exchange.Server.Application.csproj" />
       <ProjectReference Include="..\Exchange.Server.Domain\Exchange.Server.Domain.csproj" />
     </ItemGroup>
