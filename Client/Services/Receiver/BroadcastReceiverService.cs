@@ -1,26 +1,24 @@
-﻿using Client.Models;
-using Client.Services.Analyzer;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using Models;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using Client.Services.Analyzer;
+using Exchange.Domain.Models;
+using Microsoft.Extensions.Options;
 
 namespace Client.Services.Receiver;
 
 internal sealed class BroadcastReceiverService : BackgroundService
 {
-    private int _totalReceived;
-    private int _totalProcessed;
-    private Task _receivingDataTask;
-    private Dictionary<string, List<FinancialQuote>> _tickerQuotes;
-
-    private readonly UdpClient _udpClient;
-    private readonly ReceiverOptions _options;
     private readonly AnalyzerService _analyzer;
     private readonly ILogger<BroadcastReceiverService> _logger;
+    private readonly ReceiverOptions _options;
+
+    private readonly UdpClient _udpClient;
+    private Task _receivingDataTask;
+    private readonly Dictionary<string, List<FinancialQuote>> _tickerQuotes;
+    private int _totalProcessed;
+    private int _totalReceived;
 
     public BroadcastReceiverService(ILogger<BroadcastReceiverService> logger,
         IOptions<ReceiverOptions> options, AnalyzerService analyzer)
@@ -38,7 +36,7 @@ internal sealed class BroadcastReceiverService : BackgroundService
         foreach (var group in _options.MulticastGroupsAddresses)
             _udpClient.JoinMulticastGroup(group, _options.LocalIPAddress);
 
-        _udpClient.BeginReceive(new AsyncCallback(ReceivedCounterCallback), null);
+        _udpClient.BeginReceive(ReceivedCounterCallback, null);
     }
 
     private async Task HandleIncomingAsync(byte[] bytes, CancellationToken ct)
@@ -91,16 +89,16 @@ internal sealed class BroadcastReceiverService : BackgroundService
     private async Task AnalyzeAsync(CancellationToken ct)
     {
         if (_tickerQuotes.Count == 0) return;
-        AnalysisResult[] results = await _analyzer.AnalyzeAsync(_tickerQuotes, ct);
-        for (int i = 0; i < results.Length; i++)
+        var results = await _analyzer.AnalyzeAsync(_tickerQuotes, ct);
+        for (var i = 0; i < results.Length; i++)
             _logger.LogInformation(results[i].ToString());
     }
 
     private void ReceivedCounterCallback(IAsyncResult ar)
     {
-        IPEndPoint sender = new(0, 0);
-        Byte[] receivedBytes = _udpClient.EndReceive(ar, ref sender);
+        IPEndPoint? sender = new(0, 0);
+        _udpClient.EndReceive(ar, ref sender);
         _totalReceived++;
-        _udpClient.BeginReceive(new AsyncCallback(ReceivedCounterCallback), null);
+        _udpClient.BeginReceive(ReceivedCounterCallback, null);
     }
 }

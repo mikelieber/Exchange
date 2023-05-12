@@ -1,18 +1,19 @@
 ﻿using Client.Models;
-using Models;
+using Exchange.Domain.Models;
 
 namespace Client.Services.Analyzer;
 
 internal sealed class AnalyzerService
 {
-    public async Task<AnalysisResult[]> AnalyzeAsync(Dictionary<string, List<FinancialQuote>> quotes, CancellationToken ct)
+    public async Task<AnalysisResult[]> AnalyzeAsync(Dictionary<string, List<FinancialQuote>> quotes,
+        CancellationToken ct)
     {
         var results = new AnalysisResult[quotes.Count];
-        
-        int index = 0;
-        Parallel.ForEach(quotes, async (pair) =>
+
+        var index = 0;
+        Parallel.ForEach(quotes, async pair =>
         {
-            results[index++] = new AnalysisResult()
+            results[index++] = new AnalysisResult
             {
                 Average = await CalculateAverageAsync(pair.Value, ct),
                 StandartDeviation = await CalculateStandartDeviationAsync(pair.Value, ct),
@@ -31,7 +32,7 @@ internal sealed class AnalyzerService
         var bidSum = 0.0m;
         var count = quotes.Count;
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var quote = quotes[i];
             askSum += quote.AskPrice;
@@ -41,18 +42,22 @@ internal sealed class AnalyzerService
         return await Task.FromResult((askSum / count, bidSum / count));
     }
 
-    private async Task<(decimal, decimal)> CalculateStandartDeviationAsync(List<FinancialQuote> quotes, CancellationToken ct)
+    private async Task<(decimal, decimal)> CalculateStandartDeviationAsync(List<FinancialQuote> quotes,
+        CancellationToken ct)
     {
         decimal CalculateMean(decimal[] values)
         {
             var temp = 0.0m;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 temp += values[i];
-            
+
             return temp / values.Length;
         }
 
-        decimal Power(decimal value) => value * value;
+        decimal Power(decimal value)
+        {
+            return value * value;
+        }
 
         decimal GetSqrt(decimal value)
         {
@@ -63,34 +68,34 @@ internal sealed class AnalyzerService
         decimal Sum(decimal[] values)
         {
             var temp = 0.0m;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
                 temp += values[i];
             return temp;
         }
 
         var count = quotes.Count;
-        decimal[] askValues = new decimal[count];
-        decimal[] bidValues = new decimal[count];
-        for (int i = 0; i < count; i++)
+        var askValues = new decimal[count];
+        var bidValues = new decimal[count];
+        for (var i = 0; i < count; i++)
         {
             var quote = quotes[i];
             askValues[i] = quote.AskPrice;
             bidValues[i] = quote.BidPrice;
         }
 
-        decimal[] askSquareDev = new decimal[count];
-        decimal[] bidSquareDev = new decimal[count];
-        for (int i = 0; i < count; i++)
+        var askSquareDev = new decimal[count];
+        var bidSquareDev = new decimal[count];
+        for (var i = 0; i < count; i++)
         {
             askSquareDev[i] = Power(askValues[i] - CalculateMean(askValues));
             bidSquareDev[i] = Power(bidValues[i] - CalculateMean(bidValues));
         }
 
-        decimal askSquareSum = Sum(askSquareDev);
-        decimal bidSquareSum = Sum(bidSquareDev);
+        var askSquareSum = Sum(askSquareDev);
+        var bidSquareSum = Sum(bidSquareDev);
 
-        decimal askStdDev = GetSqrt(askSquareSum / count);
-        decimal bidStdDev = GetSqrt(bidSquareSum / count);
+        var askStdDev = GetSqrt(askSquareSum / count);
+        var bidStdDev = GetSqrt(bidSquareSum / count);
 
         return await Task.FromResult((askStdDev, bidStdDev));
     }
@@ -99,45 +104,41 @@ internal sealed class AnalyzerService
     {
         List<decimal> CalculateMode(decimal[] values)
         {
-            decimal[] sorted = new decimal[values.Length];
+            var sorted = new decimal[values.Length];
             values.CopyTo(sorted, 0);
             Array.Sort(sorted);
 
-            List<decimal> result = new ();
+            List<decimal> result = new();
             var counts = new Dictionary<decimal, int>();
-            int max = 0;
+            var max = 0;
             foreach (var num in sorted)
-            {
                 if (counts.ContainsKey(num))
                     counts[num] = counts[num] + 1;
                 else
                     counts[num] = 1;
-            }
 
             foreach (var key in counts.Keys)
-            {
                 if (counts[key] > max)
                 {
                     max = counts[key];
                     result.Add(max);
                 }
-            }
 
             return result;
         }
 
         var count = quotes.Count;
-        decimal[] askValues = new decimal[count];
-        decimal[] bidValues = new decimal[count];
-        for (int i = 0; i < count; i++)
+        var askValues = new decimal[count];
+        var bidValues = new decimal[count];
+        for (var i = 0; i < count; i++)
         {
             var quote = quotes[i];
             askValues[i] = quote.AskPrice;
             bidValues[i] = quote.BidPrice;
         }
 
-        decimal[] askModes = CalculateMode(askValues).ToArray();
-        decimal[] bidModes = CalculateMode(bidValues).ToArray();
+        var askModes = CalculateMode(askValues).ToArray();
+        var bidModes = CalculateMode(bidValues).ToArray();
 
         return await Task.FromResult((askModes, bidModes));
     }
@@ -151,9 +152,9 @@ internal sealed class AnalyzerService
         }
 
         var count = quotes.Count;
-        decimal[] askValues = new decimal[count];
-        decimal[] bidValues = new decimal[count];
-        for (int i = 0; i < count; i++)
+        var askValues = new decimal[count];
+        var bidValues = new decimal[count];
+        for (var i = 0; i < count; i++)
         {
             var quote = quotes[i];
             askValues[i] = quote.AskPrice;

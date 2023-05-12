@@ -1,19 +1,19 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace Client;
+namespace Exchange.Server.Domain.Models;
 
-internal sealed class ReceiverOptions
+public sealed class TransmitterOptions
 {
-    internal const string Section = "ReceiverOptions";
-    public string[] MulticastGroups { get; set; }
+    public const string Section = "TransmitterOptions";
+    public Dictionary<string, string> MulticastGroups { get; set; }
 
-    public IEnumerable<IPAddress> MulticastGroupsAddresses
+    public IEnumerable<KeyValuePair<string, IPEndPoint>> MulticastGroupsAddresses
     {
         get
         {
             foreach (var group in MulticastGroups)
-                yield return IPAddress.Parse(group);
+                yield return new KeyValuePair<string, IPEndPoint>(group.Key, IPEndPoint.Parse(group.Value));
         }
     }
 

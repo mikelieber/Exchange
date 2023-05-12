@@ -1,22 +1,24 @@
-﻿using Microsoft.Extensions.Options;
-using Models;
-using Server.Services.Generator;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using Exchange.Abstractions;
+using Exchange.Server.Domain.Models;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace Server.Services.Transmitter;
+namespace Exchange.Server.Infrastructure;
 
-internal sealed class BroadcastTransmitterService : BackgroundService
+public sealed class BroadcastTransmitterService : BackgroundService
 {
-    private readonly UdpClient _udpClient;
-    private readonly TransmitterOptions _options;
-    private readonly FinancialQuoteGeneratorService _generator;
+    private readonly QuoteGeneratorService _generator;
     private readonly ILogger<BroadcastTransmitterService> _logger;
+    private readonly TransmitterOptions _options;
+    private readonly UdpClient _udpClient;
 
     public BroadcastTransmitterService(ILogger<BroadcastTransmitterService> logger,
-        IOptions<TransmitterOptions> options, FinancialQuoteGeneratorService generator)
+        IOptions<TransmitterOptions> options, QuoteGeneratorService generator)
     {
         _logger = logger;
         _generator = generator;
@@ -37,11 +39,11 @@ internal sealed class BroadcastTransmitterService : BackgroundService
         }
     }
 
-    private async Task SendByListAsync(IDictionary<string, FinancialQuote> quotes, CancellationToken ct)
+    private async Task SendByListAsync(IDictionary<string, IFinancialQuote> quotes, CancellationToken ct)
     {
-        byte[] ToBytes(FinancialQuote quote)
+        byte[] ToBytes(IFinancialQuote quote)
         {
-            string message = JsonSerializer.Serialize(quote);
+            var message = JsonSerializer.Serialize(quote);
             return Encoding.UTF8.GetBytes(message);
         }
 

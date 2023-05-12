@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference PrivateAssets="All" Include="..\..\Exchange.Abstractions\Exchange.Abstractions.csproj" />
+      <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Domain\Exchange.Server.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

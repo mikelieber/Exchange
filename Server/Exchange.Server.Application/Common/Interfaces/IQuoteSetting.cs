@@ -1,6 +1,6 @@
-﻿namespace Server.Services.Generator;
+﻿namespace Exchange.Server.Application.Common.Interfaces;
 
-internal sealed class QuoteSettings
+public interface IQuoteSetting
 {
     public string Group { get; set; }
     public string Symbol { get; set; }
