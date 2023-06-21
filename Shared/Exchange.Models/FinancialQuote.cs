@@ -20,7 +20,7 @@ public sealed class FinancialQuote : IFinancialQuote
 
     public static FinancialQuote Create(IFinancialQuote source)
     {
-        return new FinancialQuote()
+        return new FinancialQuote
         {
             BidPrice = source.BidPrice,
             Id = source.Id,

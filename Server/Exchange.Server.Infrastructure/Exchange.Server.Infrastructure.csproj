@@ -7,19 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Exchange.Abstractions\Exchange.Abstractions.csproj" />
-      <ProjectReference Include="..\..\Exchange.Models\Exchange.Models.csproj" />
-      <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Application\Exchange.Server.Application.csproj" />
-      <ProjectReference Include="..\Exchange.Server.Domain\Exchange.Server.Domain.csproj" />
+        <ProjectReference Include="..\..\Shared\Exchange.Abstractions\Exchange.Abstractions.csproj"/>
+        <ProjectReference Include="..\..\Shared\Exchange.Models\Exchange.Models.csproj"/>
+        <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Application\Exchange.Server.Application.csproj"/>
+        <ProjectReference Include="..\Exchange.Server.Domain\Exchange.Server.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0"/>
     </ItemGroup>
 
 </Project>

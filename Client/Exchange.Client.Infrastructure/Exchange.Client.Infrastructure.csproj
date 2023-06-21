@@ -7,16 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Exchange.Models\Exchange.Models.csproj" />
-      <ProjectReference Include="..\Exchange.Client.Application\Exchange.Client.Application.csproj" />
-      <ProjectReference Include="..\Exchange.Client.Domain\Exchange.Client.Domain.csproj" />
+        <ProjectReference Include="..\..\Shared\Exchange.Models\Exchange.Models.csproj"/>
+        <ProjectReference Include="..\Exchange.Client.Application\Exchange.Client.Application.csproj"/>
+        <ProjectReference Include="..\Exchange.Client.Domain\Exchange.Client.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
-      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0"/>
     </ItemGroup>
 
 </Project>

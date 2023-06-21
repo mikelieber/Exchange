@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Exchange.Abstractions\Exchange.Abstractions.csproj" />
+        <ProjectReference Include="..\..\Shared\Exchange.Abstractions\Exchange.Abstractions.csproj"/>
     </ItemGroup>
 
 </Project>

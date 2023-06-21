@@ -8,14 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Application\Exchange.Server.Application.csproj" />
-      <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Infrastructure\Exchange.Server.Infrastructure.csproj" />
+        <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Application\Exchange.Server.Application.csproj"/>
+        <ProjectReference PrivateAssets="All" Include="..\Exchange.Server.Infrastructure\Exchange.Server.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

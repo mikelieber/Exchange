@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
 using Exchange.Abstractions;
+using Exchange.Server.Application.Common.Interfaces;
 using Exchange.Server.Domain.Models;
+using Exchange.Server.Infrastructure.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Exchange.Server.Infrastructure;
+namespace Exchange.Server.Infrastructure.Services;
 
 public sealed class BroadcastTransmitterService : BackgroundService
 {
@@ -17,7 +17,7 @@ public sealed class BroadcastTransmitterService : BackgroundService
     private readonly TransmitterOptions _options;
     private readonly UdpClient _udpClient;
 
-    public BroadcastTransmitterService(ILogger<BroadcastTransmitterService> logger,
+    public BroadcastTransmitterService(ILogger<BroadcastTransmitterService> logger, IQuotesStorage quotesStorage,
         IOptions<TransmitterOptions> options, QuoteGeneratorService generator)
     {
         _logger = logger;
@@ -34,25 +34,21 @@ public sealed class BroadcastTransmitterService : BackgroundService
     {
         while (!ct.IsCancellationRequested)
         {
-            var quotes = await _generator.GenerateQuotesAsync(ct);
-            await Task.Run(() => SendByListAsync(quotes, ct), ct);
+            var quotes = _generator.GenerateQuotes();
+            await SendByListAsync(quotes, ct);
         }
     }
 
     private async Task SendByListAsync(IDictionary<string, IFinancialQuote> quotes, CancellationToken ct)
     {
-        byte[] ToBytes(IFinancialQuote quote)
+        foreach (var (quoteGroup, quote) in quotes)
         {
-            var message = JsonSerializer.Serialize(quote);
-            return Encoding.UTF8.GetBytes(message);
-        }
+            if (!_options.MulticastGroups.TryGetValue(quoteGroup, out var group))
+                continue;
 
-        foreach (var quote in quotes)
-        {
-            var group = _options.MulticastGroups[quote.Key];
-            if (string.IsNullOrEmpty(group)) continue;
-            await Task.Run(() => SendMulticast(ToBytes(quote.Value), IPEndPoint.Parse(group)), ct);
-            _logger.LogInformation("{0} Message broadcasted to {1}", DateTime.Now, group);
+            await Task.Run(() => SendMulticast(quote.SerializeToBytes(), IPEndPoint.Parse(group)), ct);
+
+            _logger.LogTrace("{Time} Message broadcasted to {Group}", DateTime.Now, group);
         }
     }
 

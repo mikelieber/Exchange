@@ -15,10 +15,10 @@ internal sealed class BroadcastReceiverService : BackgroundService
     private readonly AnalyzerService _analyzer;
     private readonly ILogger<BroadcastReceiverService> _logger;
     private readonly ReceiverOptions _options;
+    private readonly Dictionary<string, List<FinancialQuote>> _tickerQuotes;
 
     private readonly UdpClient _udpClient;
     private Task _receivingDataTask;
-    private readonly Dictionary<string, List<FinancialQuote>> _tickerQuotes;
     private int _totalProcessed;
     private int _totalReceived;
 

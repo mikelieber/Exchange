@@ -2,8 +2,7 @@ using Exchange.Server.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddGenerator(builder.Configuration);
-builder.Services.AddTransmitter(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
