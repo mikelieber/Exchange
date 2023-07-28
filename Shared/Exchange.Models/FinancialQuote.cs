@@ -1,17 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Exchange.Abstractions;
 
 namespace Exchange.Models;
 
+[ExcludeFromCodeCoverage]
+[DebuggerDisplay("Symbol: {Symbol} Ask: {AskPrice} Bid {BidPrice}")]
 public sealed class FinancialQuote : IFinancialQuote
 {
     [Key]
     public int Id { get; set; }
-
     public string Symbol { get; set; }
-    public decimal AskPrice { get; set; }
-    public decimal BidPrice { get; set; }
-    public DateTime Time { get; set; }
+    public double AskPrice { get; set; }
+    public double BidPrice { get; set; }
+    public long Time { get; set; }
 
     public override string ToString()
     {

@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Exchange.Client.Domain.Models;
 
+[ExcludeFromCodeCoverage]
 public class ReceiverOptions
 {
     public const string Section = "ReceiverOptions";

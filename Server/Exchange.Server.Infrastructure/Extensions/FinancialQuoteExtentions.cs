@@ -21,12 +21,12 @@ public static class FinancialQuoteExtensions
             Symbol = setting.Symbol,
             AskPrice = NextDecimal(setting.LowAsk, setting.HighAsk),
             BidPrice = NextDecimal(setting.LowBid, setting.HighBid),
-            Time = DateTime.Now
+            Time = DateTime.Now.Ticks
         };
     }
 
-    private static decimal NextDecimal(decimal min, decimal max)
+    private static double NextDecimal(double min, double max)
     {
-        return (decimal)Random.Shared.NextDouble() * (max - min) + min;
+        return Random.Shared.NextDouble() * (max - min) + min;
     }
 }

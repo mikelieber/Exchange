@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Exchange.Server.Domain.Models;
 
+[ExcludeFromCodeCoverage]
 public sealed class TransmitterOptions
 {
     public const string Section = "TransmitterOptions";

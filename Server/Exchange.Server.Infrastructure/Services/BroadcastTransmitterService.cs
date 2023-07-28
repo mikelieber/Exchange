@@ -36,6 +36,7 @@ public sealed class BroadcastTransmitterService : BackgroundService
         {
             var quotes = _generator.GenerateQuotes();
             await SendByListAsync(quotes, ct);
+            await Task.Delay(1000, ct);
         }
     }
 

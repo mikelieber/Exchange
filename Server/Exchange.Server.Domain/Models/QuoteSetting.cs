@@ -1,11 +1,14 @@
-﻿namespace Exchange.Server.Domain.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Exchange.Server.Domain.Models;
+
+[ExcludeFromCodeCoverage]
 public sealed class QuoteSetting
 {
     public string Group { get; set; } = null!;
     public string Symbol { get; set; } = null!;
-    public decimal LowAsk { get; set; }
-    public decimal HighAsk { get; set; }
-    public decimal LowBid { get; set; }
-    public decimal HighBid { get; set; }
+    public double LowAsk { get; set; }
+    public double HighAsk { get; set; }
+    public double LowBid { get; set; }
+    public double HighBid { get; set; }
 }
