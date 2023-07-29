@@ -36,7 +36,6 @@ public sealed class BroadcastTransmitterService : BackgroundService
         {
             var quotes = _generator.GenerateQuotes();
             await SendByListAsync(quotes, ct);
-            await Task.Delay(1000, ct);
         }
     }
 
@@ -55,6 +54,13 @@ public sealed class BroadcastTransmitterService : BackgroundService
 
     private async Task SendMulticast(byte[] bufferToSend, IPEndPoint group)
     {
-        await _udpClient.SendAsync(bufferToSend, bufferToSend.Length, group);
+        try
+        {
+            await _udpClient.SendAsync(bufferToSend, bufferToSend.Length, group);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("There was an error sending packages: {Error}", e.Message);
+        }
     }
 }

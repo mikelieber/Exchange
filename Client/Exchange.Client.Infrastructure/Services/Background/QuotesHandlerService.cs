@@ -5,16 +5,19 @@ using Exchange.Abstractions;
 using Exchange.Client.Infrastructure.Common.Interfaces;
 using Exchange.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace Exchange.Client.Infrastructure.Services;
+namespace Exchange.Client.Infrastructure.Services.Background;
 
 public sealed class QuotesHandlerService : BackgroundService
 {
-    private readonly IBroadcastSubscriberService _subscriber;
     private readonly IQuotesCache _quotesCache;
+    private readonly ILogger<QuotesHandlerService> _logger;
+    private readonly IBroadcastSubscriberService _subscriber;
 
-    public QuotesHandlerService(IBroadcastSubscriberService subscriber, IQuotesCache quotesCache)
+    public QuotesHandlerService(IBroadcastSubscriberService subscriber, IQuotesCache quotesCache, ILogger<QuotesHandlerService> logger)
     {
+        _logger = logger;
         _subscriber = subscriber;
         _quotesCache = quotesCache;
     }
@@ -24,7 +27,10 @@ public sealed class QuotesHandlerService : BackgroundService
         while (!cancellationToken.IsCancellationRequested)
         {
             var message = await _subscriber.GetLastMessageAsync(cancellationToken);
-            var quote = ParseQuotesAsync(message);
+            if (message == null)
+                continue;
+
+            var quote = ParseQuotesAsync(message.Value);
             if (quote != null)
                 _quotesCache.Add(quote);
         }
@@ -41,8 +47,7 @@ public sealed class QuotesHandlerService : BackgroundService
         }
         catch (Exception e)
         {
-            // Ignored
-            // TODO: Add logging
+            _logger.LogError("There was an error parsing a quote: {Error}", e.Message);
         }
 
         return quote;

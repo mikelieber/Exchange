@@ -60,10 +60,11 @@ public static class DoubleExtensions
         var counters = new Dictionary<double, int>();
         foreach (var value in values)
         {
-            if (counters.ContainsKey(value))
-                counters[value]++;
+            var rounded = Math.Round(value, 2);
+            if (counters.ContainsKey(rounded))
+                counters[rounded]++;
             else
-                counters[value] = 1;
+                counters[rounded] = 1;
         }
 
         var result = new List<double>();

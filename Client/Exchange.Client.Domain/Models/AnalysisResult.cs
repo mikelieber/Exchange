@@ -6,7 +6,7 @@ namespace Exchange.Client.Domain.Models;
 [ExcludeFromCodeCoverage]
 public sealed class AnalysisResult
 {
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = null!;
     public double AverageAskPrice { get; set; }
     public double AverageBidPrice { get; set; }
     public double StdAskDeviation { get; set; }
@@ -20,12 +20,12 @@ public sealed class AnalysisResult
 
         sb.Append($"Average: {Math.Round(AverageAskPrice, 2)} / {Math.Round(AverageBidPrice, 2)}\n");
         sb.Append($"Standart dev.: {Math.Round(StdAskDeviation, 2)} / {Math.Round(StdBidDeviation, 2)}\n");
-        sb.Append($"Medians: {Math.Round(Median.Ask, 2)} / {Math.Round(Median.Bid, 2)}");
+        sb.Append($"Medians: {Math.Round(Median.Ask, 2)} / {Math.Round(Median.Bid, 2)}\n");
 
         if (Modes.Ask.Length != 0 && Modes.Bid.Length != 0)
             sb.Append($"Modes: {Math.Round(Modes.Ask[0], 2)} / {Math.Round(Modes.Bid[0], 2)}\n");
         else
-            sb.Append("Modes: Not enough data yet");
+            sb.Append("Modes: Not enough data yet\n");
 
         return sb.ToString();
     }

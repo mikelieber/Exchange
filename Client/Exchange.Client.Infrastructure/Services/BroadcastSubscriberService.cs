@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Exchange.Client.Infrastructure.Services;
 
-public sealed class BroadcastSubscriberService : IBroadcastSubscriberService
+public sealed class BroadcastSubscriberService : IBroadcastSubscriberService, IBroadcastSubscriberInfo
 {
     private readonly UdpClient _client;
     private readonly ILogger<BroadcastSubscriberService> _logger;
@@ -28,8 +28,19 @@ public sealed class BroadcastSubscriberService : IBroadcastSubscriberService
         TotalPackages++;
     }
 
-    public async ValueTask<UdpReceiveResult> GetLastMessageAsync(CancellationToken cancellationToken)
+    public async ValueTask<UdpReceiveResult?> GetLastMessageAsync(CancellationToken cancellationToken)
     {
-        return await _client.ReceiveAsync(cancellationToken);
+        UdpReceiveResult? result = null;
+
+        try
+        {
+            result = await _client.ReceiveAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("There was an error receiving a message: {Error}", e.Message);
+        }
+
+        return result;
     }
 }
